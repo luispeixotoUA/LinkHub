@@ -22,6 +22,16 @@ exports.updateProfile = async (req, res, userService) => {
   }
 };
 
+exports.getPrivateProfile = async (req, res, userService) => {
+  try {
+    const user = await userService.findById(req.user.userId);
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
+
 exports.getPublicProfile = async (req, res, userService, linkService) => {
   try {
     const user = await userService.findByUrl(req.params.url);

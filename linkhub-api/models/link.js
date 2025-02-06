@@ -11,6 +11,22 @@ const Link = sequelize.define('Link', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  order: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0
+  },
+}, {
+  hooks: {
+    beforeCreate: async (link) => {
+      if (!link.order) {
+        const maxOrder = await Link.max('order', { 
+          where: { userId: link.userId } 
+        });
+        link.order = (maxOrder || 0) + 1;
+      }
+    }
+  }
 });
 
 Link.belongsTo(User, { foreignKey: 'userId' });

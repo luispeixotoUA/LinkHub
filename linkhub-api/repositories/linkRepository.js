@@ -25,6 +25,31 @@ class LinkRepository {
   
       return link.update(updatedData);
     }
+
+    async findLinksByUserId(userId) {
+      return this.Link.findAll({ 
+        where: { userId },
+        order: [['order', 'ASC']]
+      });
+    }
+
+    async findLinksByUsername(username) {
+      return this.Link.findAll({
+        include: [{
+          model: require('../models/user'),
+          where: { username },
+          attributes: []
+        }],
+        order: [['order', 'ASC']]
+      });
+    }
+
+    async reorderLinks(links) {
+      const updates = links.map(({ id, order }) =>
+        this.Link.update({ order }, { where: { id } })
+      );
+      return Promise.all(updates);
+    }
   
     async deleteLink(linkId) {
       const link = await this.Link.findByPk(linkId);

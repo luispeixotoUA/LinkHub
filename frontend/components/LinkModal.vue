@@ -1,35 +1,35 @@
 <template>
-  <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-    <div class="bg-white p-6 rounded-lg shadow-lg w-80">
-      <h3 class="text-xl font-bold mb-4">
-        {{ link?.id ? "Editar Link" : "Adicionar Link" }}
-      </h3>
-      <form @submit.prevent="save">
-        <div class="mb-4">
-          <label class="block text-sm font-medium mb-1">Título</label>
-          <input
-            v-model="form.title"
-            type="text"
-            placeholder="Título do link"
-            class="w-full px-3 py-2 border rounded-md"
-            required
-          />
+  <div class="fixed inset-0 -top-10 bg-black bg-opacity-50 flex items-center justify-center w-[100vw] h-[105vh]">
+    <div class="bg-white rounded-lg p-6 w-full max-w-md">
+      <h2 class="text-xl font-semibold mb-4">
+        {{ link ? 'Editar Link' : 'Adicionar Link' }}
+      </h2>
+      <form @submit.prevent="handleSubmit">
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Título</label>
+            <input
+              v-model="formData.title"
+              type="text"
+              required
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">URL</label>
+            <input
+              v-model="formData.url"
+              type="url"
+              required
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            />
+          </div>
         </div>
-        <div class="mb-4">
-          <label class="block text-sm font-medium mb-1">URL</label>
-          <input
-            v-model="form.url"
-            type="url"
-            placeholder="https://exemplo.com"
-            class="w-full px-3 py-2 border rounded-md"
-            required
-          />
-        </div>
-        <div class="flex justify-end space-x-2">
+        <div class="mt-6 flex justify-end space-x-3">
           <button
             type="button"
             @click="$emit('close')"
-            class="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400"
+            class="px-4 py-2 border rounded-md hover:bg-gray-50"
           >
             Cancelar
           </button>
@@ -37,7 +37,7 @@
             type="submit"
             class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
           >
-            Guardar
+            Salvar
           </button>
         </div>
       </form>
@@ -46,29 +46,29 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { onMounted, ref } from 'vue';
 
 const props = defineProps({
-  link: Object,
+  link: {
+    type: Object,
+    default: null
+  }
 });
 
-const emit = defineEmits(["close", "save"]);
+const emit = defineEmits(['close', 'save']);
 
-const form = ref({
-  title: "",
-  url: "",
+const formData = ref({
+  title: '',
+  url: ''
 });
 
-// Inicializa o formulário ao abrir o modal
-watch(
-  () => props.link,
-  (newLink) => {
-    form.value = newLink ? { ...newLink } : { title: "", url: "" };
-  },
-  { immediate: true }
-);
+onMounted(() => {
+  if (props.link) {
+    formData.value = { ...props.link };
+  }
+});
 
-const save = () => {
-  emit("save", { ...form.value });
+const handleSubmit = () => {
+  emit('save', formData.value);
 };
 </script>

@@ -15,6 +15,8 @@ class AuthService {
 
     // Verificar se o URL padrão (baseado no username) já está em uso
     let url = userData.username; // Default URL
+    let theme = "{'backgroundColor':'#1e1e1e','textColor':'#ffffff'}"
+    let profilePicture = userData.username;
     const existingUrl = await this.userRepository.findByUrl(url);
     if (existingUrl) {
       // Gerar um URL único
@@ -27,6 +29,8 @@ class AuthService {
       ...userData,
       password: hashedPassword,
       url, // Usar o URL único gerado
+      theme,
+      profilePicture
     });
   }
 
@@ -42,7 +46,7 @@ class AuthService {
 
     return uniqueUrl;
   }
-  
+
 
   async login(username, password) {
     const user = await this.userRepository.findByUsername(username);
@@ -51,22 +55,30 @@ class AuthService {
     const isValidPassword = await bcrypt.compare(password, user.password);
     if (!isValidPassword) throw new Error('Invalid password');
 
-    const token = jwt.sign({ userId: user.id, username: user.username }, 'secretKey', { expiresIn: '1h' });
+    const token = jwt.sign({
+      userId: user.id,
+      username: user.username,
+      displayName: user.displayName,
+      isAdmin: user.isAdmin,
+      url: user.url,
+      profilePicture: user.profilePicture,
+    }, 'secretKey', { expiresIn: '1h' });
+
     return token;
   }
 
-    // Gerar URL único baseado no username
-    async generateUniqueUrl(baseUrl) {
-      let uniqueUrl = baseUrl;
-      let counter = 1;
-  
-      while (await this.userRepository.findByUrl(uniqueUrl)) {
-        uniqueUrl = `${baseUrl}-${counter}`;
-        counter++;
-      }
-  
-      return uniqueUrl;
+  // Gerar URL único baseado no username
+  async generateUniqueUrl(baseUrl) {
+    let uniqueUrl = baseUrl;
+    let counter = 1;
+
+    while (await this.userRepository.findByUrl(uniqueUrl)) {
+      uniqueUrl = `${baseUrl}-${counter}`;
+      counter++;
     }
+
+    return uniqueUrl;
+  }
 
 }
 

@@ -1,10 +1,37 @@
 export const useAuth = () => {
   const token = useState('token', () => null);
 
-  if (process.client && !token.value) {
+  // Função para verificar se o token JWT é válido
+  const isTokenValid = (token) => {
+    if (!token) return false;
+    
+    try {
+      // Decodifica o token (parte payload)
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const payload = JSON.parse(window.atob(base64));
+      
+      // Verifica se o token expirou
+      const expirationTime = payload.exp * 1000; // Converter para milissegundos
+      return Date.now() < expirationTime;
+    } catch (error) {
+      console.error('Erro ao verificar token:', error);
+      return false;
+    }
+  };
+
+  // Verifica o token ao inicializar
+  if (process.client) {
     const savedToken = localStorage.getItem('authToken');
     if (savedToken) {
-      token.value = savedToken;
+      if (isTokenValid(savedToken)) {
+        token.value = savedToken;
+      } else {
+        // Se o token não é válido, remove
+        console.log('Token expirado, removendo...');
+        localStorage.removeItem('authToken');
+        token.value = null;
+      }
     }
   }
 
@@ -20,9 +47,11 @@ export const useAuth = () => {
       }
 
       const jwtToken = data.value?.token;
-      if (jwtToken) {
+      if (jwtToken && isTokenValid(jwtToken)) {
         token.value = jwtToken;
         localStorage.setItem('authToken', jwtToken);
+      } else {
+        throw new Error('Token inválido recebido do servidor');
       }
       return jwtToken;
     } catch (error) {
@@ -30,6 +59,23 @@ export const useAuth = () => {
       throw error;
     }
   };
+
+  // Função para verificar token periodicamente
+  const startTokenCheck = () => {
+    if (process.client) {
+      setInterval(() => {
+        const currentToken = token.value;
+        if (currentToken && !isTokenValid(currentToken)) {
+          console.log('Token expirou durante a sessão');
+          logout();
+          window.location.href = '/login'; // Força recarregamento para login
+        }
+      }, 60000); // Verifica a cada minuto
+    }
+  };
+
+  // Inicia verificação periódica
+  startTokenCheck();
 
   const register = async (username, password) => {
     try {
@@ -60,7 +106,16 @@ export const useAuth = () => {
     localStorage.removeItem('authToken');
   };
 
-  const isAuthenticated = computed(() => !!token.value);
+  const isAuthenticated = computed(() => {
+    return token.value && isTokenValid(token.value);
+  });
 
-  return { login, register, logout, token, isAuthenticated };
+  return { 
+    login, 
+    register, 
+    logout, 
+    token, 
+    isAuthenticated,
+    isTokenValid // Exporta para uso em outros componentes se necessário
+  };
 };

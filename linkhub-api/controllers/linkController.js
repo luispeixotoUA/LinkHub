@@ -17,6 +17,33 @@ exports.createLinksInBulk = async (req, res, linkService) => {
   }
 };
 
+exports.updateLink = async (req, res, linkService) => {
+  try {
+    const link = await linkService.updateLink(req.user.userId, req.params.id, req.body);
+    res.json(link);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
+exports.deleteLink = async (req, res, linkService) => {
+  try {
+    await linkService.deleteLink(req.user.userId, req.params.id);
+    res.status(204).send();
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
+exports.reorderLinks = async (req, res, linkService) => {
+  try {
+    const updatedLinks = await linkService.reorderLinks(req.user.userId, req.body.linkOrders);
+    res.json(updatedLinks);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
 exports.getUserLinks = async (req, res, linkService) => {
   try {
     const links = await linkService.getUserLinks(req.user.userId);

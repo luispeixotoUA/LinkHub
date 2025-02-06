@@ -1,70 +1,44 @@
 <template>
-  <div class="p-6 bg-gray-100 min-h-screen">
-    <h1 class="text-3xl font-bold mb-4">Os teus Links</h1>
+  <div class="flex w-full h-[100vh] bg-gray-100">
+    <!-- Sidebar -->
+    <AdminSidebar />
 
-    <!-- Status de carregamento -->
-    <div v-if="pending" class="text-blue-500">Carregando links...</div>
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+      <!-- Top Navigation -->
+      <header class="bg-white shadow-sm">
+        <div class="flex items-center justify-between p-4">
+          <h1 class="text-2xl font-semibold text-gray-800">
+            {{ currentPageTitle }}
+          </h1>
+          <LogoutButton class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors" />
+        </div>
+      </header>
 
-    <!-- Erro -->
-    <div v-else-if="error" class="text-red-500">
-      <p>Erro: {{ error }}</p>
+      <!-- Page Content -->
+      <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6">
+        <NuxtPage />
+      </main>
     </div>
-
-    <!-- Lista de Links -->
-    <ul v-else class="space-y-3">
-      <li
-        v-for="link in links"
-        :key="link.id"
-        class="bg-white p-4 rounded shadow hover:bg-gray-50"
-      >
-        <a
-          :href="link.url"
-          target="_blank"
-          class="text-blue-500 hover:underline"
-        >
-          {{ link.title }}
-        </a>
-      </li>
-    </ul>
   </div>
 </template>
 
 <script setup>
 definePageMeta({
-  middleware: 'auth'
+  middleware: 'auth',
+  layout: false
 });
 
-const { token } = useAuth();
-const links = ref([]);
-const pending = ref(true);
-const error = ref(null);
+const route = useRoute();
 
-const fetchLinks = async () => {
-  try {
-    pending.value = true;
-    
-    const response = await useFetch('/api/links', {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${token.value}`,
-      }
-    });
-
-    if (response.error.value) {
-      throw new Error(response.error.value.message);
-    }
-
-    links.value = response.data.value;
-  } catch (err) {
-    console.error('Erro:', err);
-    error.value = err.message;
-    if (err.response?.status === 401) {
-      navigateTo('/login');
-    }
-  } finally {
-    pending.value = false;
-  }
-};
-
-onMounted(fetchLinks);
+// Título dinâmico baseado na rota atual
+const currentPageTitle = computed(() => {
+  const paths = {
+    '/admin': 'Dashboard',
+    '/admin/links': 'Gerenciar Links',
+    '/admin/profile': 'Perfil',
+    '/admin/settings': 'Configurações'
+  };
+  return paths[route.path] || 'Admin';
+});
 </script>

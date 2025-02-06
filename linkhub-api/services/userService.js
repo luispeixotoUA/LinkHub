@@ -8,6 +8,11 @@ class UserService {
         console.log('username', username)
       return this.userRepository.findByUsername(username);
     }
+
+    // Buscar usuário por id
+    async findById(id) {
+        return this.userRepository.findById(id);
+      }
   
     // Buscar usuário por URL
     async findByUrl(url) {

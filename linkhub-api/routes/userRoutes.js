@@ -8,6 +8,8 @@ module.exports = (userService, linkService) => {
   // Rota protegida: Atualizar perfil
   router.put('/profile', authMiddleware, (req, res) => userController.updateProfile(req, res, userService));
 
+  router.get('/', authMiddleware, (req, res) => userController.getPrivateProfile(req, res, userService));
+
   // Rota pública: Obter perfil público
   router.get('/:url', (req, res) => userController.getPublicProfile(req, res, userService, linkService));
 
