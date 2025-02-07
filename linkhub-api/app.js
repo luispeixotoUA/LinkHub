@@ -1,7 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const mongoose = require('./models/db');
 
-require('./models/db');
+const app = express();
+app.use(bodyParser.json());
 
 // Models
 const User = require('./models/User');
@@ -20,14 +22,12 @@ const LinkService = require('./services/linkService');
 const MetricService = require('./services/metricService');
 
 // Initialize repositories
-// app.js
 const userRepository = new UserRepository(User);
-const authService = new AuthService(userRepository);
-
 const linkRepository = new LinkRepository(Link);
 const metricRepository = new MetricRepository(Metric, Link);
 
 // Initialize services
+const authService = new AuthService(userRepository);
 const userService = new UserService(userRepository);
 const linkService = new LinkService(linkRepository);
 const metricService = new MetricService(metricRepository, userRepository, linkRepository);
@@ -37,9 +37,6 @@ const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const linkRoutes = require('./routes/linkRoutes');
 const metricRoutes = require('./routes/metricRoutes');
-
-const app = express();
-app.use(bodyParser.json());
 
 app.use('/auth', authRoutes(authService, userService));
 app.use('/users', userRoutes(userService, linkService));

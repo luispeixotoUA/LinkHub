@@ -1,7 +1,7 @@
 // composables/useApi.js
 export const useApi = () => {
   const config = useRuntimeConfig()
-  
+
   const fetchProfile = async (username) => {
     const { data, error } = await useFetch(`/users/${username}`, {
       baseURL: config.public.apiBase,

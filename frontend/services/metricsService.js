@@ -33,7 +33,6 @@ export const metricsService = {
 
 
   async trackProfileView(username) {
-    console.log('TA A DAR TRACKING');
     const { data, error } = await useFetch('/api/metrics/profile/' + username + '/view', {
       method: 'POST',
       server: false,

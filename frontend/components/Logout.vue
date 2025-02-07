@@ -8,12 +8,12 @@
 </template>
 
 <script setup>
-import { useAuth } from '~/composables/useAuth';
+import { useAuth } from "~/composables/useAuth";
 
 const { logout } = useAuth();
 
 const handleLogout = () => {
-  logout(); // Faz logout
-  alert('Desconectado com sucesso.');
+  logout();
+  alert("Logout com sucesso.");
 };
 </script>

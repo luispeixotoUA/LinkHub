@@ -1,11 +1,9 @@
-// Removido BASE_URL pois usaremos o proxy do Nuxt
 const defaultConfig = {
   headers: {
     'Content-Type': 'application/json',
   },
 };
 
-// Cliente HTTP com interceptors e configuração padrão
 const http = {
   async get(endpoint) {
     return this.request('GET', endpoint);
@@ -39,9 +37,8 @@ const http = {
     }
 
     try {
-      // Usando o endpoint direto, o Nuxt cuidará do proxy
       const response = await fetch(endpoint, config);
-      
+
       if (!response.ok) {
         const error = await response.json().catch(() => ({}));
         throw new Error(error.message || 'Erro na requisição');
@@ -55,4 +52,4 @@ const http = {
   }
 };
 
-export default http; 
+export default http;

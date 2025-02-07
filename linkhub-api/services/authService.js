@@ -14,28 +14,25 @@ class AuthService {
       throw new Error('Username already taken');
     }
 
-    // Verificar se o URL padrão (baseado no username) já está em uso
-    let url = userData.username; // Default URL
-    let theme = "{'backgroundColor':'#1e1e1e','textColor':'#ffffff'}"
+    let url = userData.username;
+    
+    let theme = "{'primaryColor': '#059669', 'backgroundColor': '#f0fdf4', 'textColor': '#064e3b', 'borderRadius': 'large'}";
     let profilePicture = userData.username;
     const existingUrl = await this.userRepository.findByUrl(url);
     if (existingUrl) {
-      // Gerar um URL único
       url = await this.generateUniqueUrl(url);
     }
 
-    // Criar usuário com o URL único
     const hashedPassword = await bcrypt.hash(userData.password, 10);
     return this.userRepository.createUser({
       ...userData,
       password: hashedPassword,
-      url, // Usar o URL único gerado
+      url,
       theme,
       profilePicture
     });
   }
 
-  // Gerar URL único baseado no username
   async generateUniqueUrl(baseUrl) {
     let uniqueUrl = baseUrl;
     let counter = 1;
@@ -47,7 +44,6 @@ class AuthService {
 
     return uniqueUrl;
   }
-
 
   async login(username, password) {
     const user = await this.userRepository.findByUsername(username);
@@ -68,7 +64,6 @@ class AuthService {
     return token;
   }
 
-  // Gerar URL único baseado no username
   async generateUniqueUrl(baseUrl) {
     let uniqueUrl = baseUrl;
     let counter = 1;

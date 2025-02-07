@@ -1,8 +1,5 @@
 <template>
-  <button 
-    @click="handleLogout" 
-    class="text-sm text-gray-400 hover:text-white"
-  >
+  <button @click="handleLogout" class="text-sm text-gray-400 hover:text-white">
     Sair
   </button>
 </template>
@@ -13,6 +10,6 @@ const router = useRouter();
 
 const handleLogout = async () => {
   await logout();
-  router.push('/login');
+  router.push("/login");
 };
-</script> 
+</script>

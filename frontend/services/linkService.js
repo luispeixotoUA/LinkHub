@@ -6,7 +6,12 @@ export const linkService = {
       headers: { 'Authorization': `Bearer ${token.value}` },
       server: false,
       key: 'links',
-      transform: (data) => data?.sort((a, b) => a.order - b.order) || []
+      transform: (data) => {
+        const links = data?.map(link => ({
+          ...link,
+        }));
+        return links?.sort((a, b) => a.order - b.order) || [];
+      }
     });
 
     if (error.value) throw new Error(error.value.message);
@@ -26,13 +31,23 @@ export const linkService = {
 
   async update(id, linkData) {
     const { token } = useAuth();
-    const { error } = await useFetch(`/api/links/${id}`, {
+    const sanitizedData = {
+      userId: linkData.userId,
+      title: linkData.title,
+      url: linkData.url,
+      order: linkData.order
+    };
+    const { data, error } = await useFetch(`/api/links/${id}`, {
       method: 'PUT',
-      headers: { 'Authorization': `Bearer ${token.value}` },
-      body: linkData
+      headers: {
+        'Authorization': `Bearer ${token.value}`,
+        'Content-Type': 'application/json'
+      },
+      body: sanitizedData
     });
 
     if (error.value) throw new Error(error.value.message);
+    return data.value;
   },
 
   async delete(id) {
@@ -50,7 +65,12 @@ export const linkService = {
     const { error } = await useFetch('/api/links/reorder', {
       method: 'PATCH',
       headers: { 'Authorization': `Bearer ${token.value}` },
-      body: { linkOrders }
+      body: {
+        linkOrders: linkOrders.map(order => ({
+          ...order,
+          id: order.id
+        }))
+      }
     });
 
     if (error.value) throw new Error(error.value.message);

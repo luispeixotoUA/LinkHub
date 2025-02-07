@@ -35,7 +35,6 @@ export const userService = {
   async updateProfile(userData) {
     const { token } = useAuth();
 
-    // Mantenha todos os dados existentes do perfil
     const { data, error } = await useFetch('/api/users/profile', {
       method: 'PUT',
       body: {

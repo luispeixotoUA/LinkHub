@@ -4,13 +4,13 @@ export const useAuth = () => {
   // Função para verificar se o token JWT é válido
   const isTokenValid = (token) => {
     if (!token) return false;
-    
+
     try {
       // Decodifica o token (parte payload)
       const base64Url = token.split('.')[1];
       const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
       const payload = JSON.parse(window.atob(base64));
-      
+
       // Verifica se o token expirou
       const expirationTime = payload.exp * 1000; // Converter para milissegundos
       return Date.now() < expirationTime;
@@ -27,7 +27,7 @@ export const useAuth = () => {
       if (isTokenValid(savedToken)) {
         token.value = savedToken;
       } else {
-        // Se o token não é válido, remove
+        // Se o token não é válido, remove-o
         console.log('Token expirado, removendo...');
         localStorage.removeItem('authToken');
         token.value = null;
@@ -110,12 +110,12 @@ export const useAuth = () => {
     return token.value && isTokenValid(token.value);
   });
 
-  return { 
-    login, 
-    register, 
-    logout, 
-    token, 
+  return {
+    login,
+    register,
+    logout,
+    token,
     isAuthenticated,
-    isTokenValid // Exporta para uso em outros componentes se necessário
+    isTokenValid
   };
 };

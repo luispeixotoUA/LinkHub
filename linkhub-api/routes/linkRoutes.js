@@ -1,4 +1,3 @@
-// routes/linkRoutes.js
 const express = require('express');
 const authMiddleware = require('../middlewares/authMiddleware');
 const linkController = require('../controllers/linkController');

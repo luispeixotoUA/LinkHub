@@ -1,5 +1,3 @@
-const User = require('../models/User');
-
 class UserRepository {
   constructor(UserModel) {
     this.User = UserModel;
@@ -10,8 +8,7 @@ class UserRepository {
   }
 
   async findByUsername(username) {
-    console.log("Entrou no repository");
-    return this.User.findOne({ username });
+    return await this.User.findOne({ username });
   }
 
   async findByUrl(url) {
@@ -20,6 +17,15 @@ class UserRepository {
 
   async findById(userId) {
     return await this.User.findById(userId);
+  }
+
+  async updateProfile(userId, profileData) {
+    console.log('Repository updateProfile:', { userId, profileData });
+    return await this.User.findByIdAndUpdate(
+      userId,
+      { $set: profileData },
+      { new: true }
+    );
   }
 
   async getAllUsers() {

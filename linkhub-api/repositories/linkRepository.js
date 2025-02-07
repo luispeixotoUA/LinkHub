@@ -1,35 +1,51 @@
 const Link = require('../models/Link');
 
 class LinkRepository {
+  constructor(Link) {
+    this.Link = Link;
+  }
+
   async createLink(linkData) {
-    return await Link.create(linkData);
+    return await this.Link.create(linkData);
   }
 
   async createLinksInBulk(links) {
-    return await Link.insertMany(links);
+    return await this.Link.insertMany(links);
   }
 
   async findLinksByUserId(userId) {
-    return await Link.find({ userId }).sort({ order: 1 });
+    return await this.Link.find({ userId }).sort({ order: 1 });
   }
 
   async findLinkById(linkId) {
-    return await Link.findById(linkId);
+    return await this.Link.findById(linkId);
   }
 
   async updateLink(linkId, updatedData) {
-    return await Link.findByIdAndUpdate(linkId, updatedData, { new: true });
+    console.log('Update link:', linkId, updatedData);
+    return await this.Link.findByIdAndUpdate(
+      linkId,
+      { $set: updatedData },
+      { new: true }
+    );
   }
 
   async deleteLink(linkId) {
-    return await Link.findByIdAndDelete(linkId);
+    console.log('Delete link:', linkId);
+    const result = await this.Link.findByIdAndDelete(linkId);
+    console.log('Delete result:', result);
+    return result;
   }
 
   async reorderLinks(links) {
-    const bulkOperations = links.map(({ id, order }) => ({
-      updateOne: { filter: { _id: id }, update: { order } }
+    const operations = links.map(({ id, order }) => ({
+      updateOne: {
+        filter: { _id: id },
+        update: { $set: { order } }
+      }
     }));
-    return await Link.bulkWrite(bulkOperations);
+
+    return await this.Link.bulkWrite(operations);
   }
 }
 

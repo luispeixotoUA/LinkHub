@@ -1,5 +1,3 @@
-// utils/tailwindColors.js
-
 export const tailwindColors = {
   slate: {
     50: '#f8fafc',
@@ -268,7 +266,7 @@ export const tailwindColors = {
 }
 
 export function getHexFromTailwind(bgClass) {
-  // Verifica se começa por "bg-" 
+  // Verifica se começa por "bg-"
   if (!bgClass?.startsWith('bg-')) return null
 
   // Divide em ["bg","stone","900"]

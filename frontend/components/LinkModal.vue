@@ -1,13 +1,17 @@
 <template>
-  <div class="fixed inset-0 -top-10 bg-black bg-opacity-50 flex items-center justify-center w-[100vw] h-[105vh]">
+  <div
+    class="fixed inset-0 -top-10 bg-black bg-opacity-50 flex items-center justify-center w-[100vw] h-[105vh]"
+  >
     <div class="bg-white rounded-lg p-6 w-full max-w-md">
       <h2 class="text-xl font-semibold mb-4">
-        {{ link ? 'Editar Link' : 'Adicionar Link' }}
+        {{ link ? "Editar Link" : "Adicionar Link" }}
       </h2>
       <form @submit.prevent="handleSubmit">
         <div class="space-y-4">
           <div>
-            <label class="block text-sm font-medium text-gray-700">Título</label>
+            <label class="block text-sm font-medium text-gray-700"
+              >Título</label
+            >
             <input
               v-model="formData.title"
               type="text"
@@ -46,20 +50,20 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref } from "vue";
 
 const props = defineProps({
   link: {
     type: Object,
-    default: null
-  }
+    default: null,
+  },
 });
 
-const emit = defineEmits(['close', 'save']);
+const emit = defineEmits(["close", "save"]);
 
 const formData = ref({
-  title: '',
-  url: ''
+  title: "",
+  url: "",
 });
 
 onMounted(() => {
@@ -69,6 +73,6 @@ onMounted(() => {
 });
 
 const handleSubmit = () => {
-  emit('save', formData.value);
+  emit("save", formData.value);
 };
 </script>
