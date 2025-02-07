@@ -1,14 +1,13 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('./sequelize');
+const mongoose = require('mongoose');
 
-const User = sequelize.define('User', {
-  username: { type: DataTypes.STRING, allowNull: false, unique: true }, // Login e identificador público
-  password: { type: DataTypes.STRING, allowNull: false }, // Senha encriptada
-  displayName: { type: DataTypes.STRING, allowNull: true }, // Nome visível (default: username)
-  profilePicture: { type: DataTypes.STRING, allowNull: true }, // URL da foto de perfil
-  theme: { type: DataTypes.JSON, allowNull: true }, // Configurações de cores
-  url: { type: DataTypes.STRING, allowNull: false, unique: true }, // URL do perfil (default: username)
-  isAdmin: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false }, // Permissões de administrador
-});
+const UserSchema = new mongoose.Schema({
+  username: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  displayName: { type: String, default: null },
+  profilePicture: { type: String, default: null },
+  theme: { type: Object, default: {} },
+  url: { type: String, required: true, unique: true },
+  isAdmin: { type: Boolean, default: false },
+}, { timestamps: true });
 
-module.exports = User;
+module.exports = mongoose.model('User', UserSchema);

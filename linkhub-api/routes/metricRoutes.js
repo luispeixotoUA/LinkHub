@@ -35,6 +35,7 @@ module.exports = (metricService) => {
 
  router.post('/profile/:username/view', async (req, res) => {
    try {
+    console.log("Passa aqui")
      const { username } = req.params;
      await metricService.trackProfileView(username);
      res.status(200).send();

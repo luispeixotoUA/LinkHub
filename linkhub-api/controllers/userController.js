@@ -31,6 +31,16 @@ exports.getPrivateProfile = async (req, res, userService) => {
   }
 }
 
+exports.getAllUsers = async (req, res, userService) => {
+  console.log("passa aqui");
+  try {
+    const users = await userService.getAllUsers();
+    res.json(users);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 
 exports.getPublicProfile = async (req, res, userService, linkService) => {
   try {
@@ -48,4 +58,6 @@ exports.getPublicProfile = async (req, res, userService, linkService) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+
+
 };

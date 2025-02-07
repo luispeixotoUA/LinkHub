@@ -1,29 +1,9 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('./sequelize');
-const Link = require('./link');
+const mongoose = require('mongoose');
 
-const Metric = sequelize.define('Metric', {
- type: DataTypes.ENUM('LINK_CLICK', 'PROFILE_VIEW', 'LINK_CREATED', 'LINK_UPDATED'),
- userId: {
-   type: DataTypes.INTEGER,
-   allowNull: false,
-   references: {
-     model: 'Users', 
-     key: 'id'
-   }
- },
- linkId: {
-   type: DataTypes.INTEGER,
-   references: {
-     model: 'Links',
-     key: 'id'
-   }
- }
-});
+const MetricSchema = new mongoose.Schema({
+  type: { type: String, enum: ['LINK_CLICK', 'PROFILE_VIEW', 'LINK_CREATED', 'LINK_UPDATED'], required: true },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  linkId: { type: mongoose.Schema.Types.ObjectId, ref: 'Link', default: null },
+}, { timestamps: true });
 
-Metric.belongsTo(Link, { 
- foreignKey: 'linkId',
- as: 'link'
-});
-
-module.exports = Metric;
+module.exports = mongoose.model('Metric', MetricSchema);

@@ -15,7 +15,6 @@
           <div class="text-xs font-medium text-gray-500 uppercase tracking-wider">Ordem</div>
           <div class="text-xs font-medium text-gray-500 uppercase tracking-wider">Título</div>
           <div class="text-xs font-medium text-gray-500 uppercase tracking-wider">URL</div>
-          <div class="text-xs font-medium text-gray-500 uppercase tracking-wider">Cliques</div>
           <div class="text-xs font-medium text-gray-500 uppercase tracking-wider text-right">Ações</div>
         </div>
       </template>
@@ -46,8 +45,6 @@
               </svg>
             </a>
           </div>
- 
-          <div class="text-gray-500 font-medium">{{ link.clicks || 0 }}</div>
  
           <div class="flex justify-end space-x-2">
             <button @click="$emit('edit', link)" 

@@ -47,7 +47,7 @@ const handleLogin = async () => {
   try {
     const token = await login(username.value, password.value); // Faz login
     console.log('Token recebido:', token);
-    router.push('/'); // Redireciona após o login bem-sucedido
+    router.push('/admin'); // Redireciona após o login bem-sucedido
   } catch (error) {
     alert('Erro ao fazer login. Verifica as tuas credenciais.');
   }

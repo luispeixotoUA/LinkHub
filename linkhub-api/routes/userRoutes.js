@@ -10,8 +10,15 @@ module.exports = (userService, linkService) => {
 
   router.get('/', authMiddleware, (req, res) => userController.getPrivateProfile(req, res, userService));
 
+  // GET /api/users/getAll
+  router.get('/getAll', (req, res) =>
+    userController.getAllUsers(req, res, userService)
+  );
+
+
   // Rota pública: Obter perfil público
   router.get('/:url', (req, res) => userController.getPublicProfile(req, res, userService, linkService));
+
 
   return router;
 };

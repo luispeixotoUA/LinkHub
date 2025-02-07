@@ -1,64 +1,36 @@
+const Link = require('../models/Link');
+
 class LinkRepository {
-    constructor(LinkModel) {
-      this.Link = LinkModel;
-    }
-  
-    async createLink(linkData) {
-      return this.Link.create(linkData);
-    }
-
-    async createLinksInBulk(links) {
-        return this.Link.bulkCreate(links);
-      }
-  
-    async findLinksByUserId(userId) {
-      return this.Link.findAll({ where: { userId } });
-    }
-
-    async findLinkById(linkId) {
-      return this.Link.findByPk(linkId);
-    }    
-  
-    async updateLink(linkId, updatedData) {
-      const link = await this.Link.findByPk(linkId);
-      if (!link) return null;
-  
-      return link.update(updatedData);
-    }
-
-    async findLinksByUserId(userId) {
-      return this.Link.findAll({ 
-        where: { userId },
-        order: [['order', 'ASC']]
-      });
-    }
-
-    async findLinksByUsername(username) {
-      return this.Link.findAll({
-        include: [{
-          model: require('../models/user'),
-          where: { username },
-          attributes: []
-        }],
-        order: [['order', 'ASC']]
-      });
-    }
-
-    async reorderLinks(links) {
-      const updates = links.map(({ id, order }) =>
-        this.Link.update({ order }, { where: { id } })
-      );
-      return Promise.all(updates);
-    }
-  
-    async deleteLink(linkId) {
-      const link = await this.Link.findByPk(linkId);
-      if (!link) return null;
-  
-      await link.destroy();
-      return true;
-    }
+  async createLink(linkData) {
+    return await Link.create(linkData);
   }
-  
-  module.exports = LinkRepository;
-  
+
+  async createLinksInBulk(links) {
+    return await Link.insertMany(links);
+  }
+
+  async findLinksByUserId(userId) {
+    return await Link.find({ userId }).sort({ order: 1 });
+  }
+
+  async findLinkById(linkId) {
+    return await Link.findById(linkId);
+  }
+
+  async updateLink(linkId, updatedData) {
+    return await Link.findByIdAndUpdate(linkId, updatedData, { new: true });
+  }
+
+  async deleteLink(linkId) {
+    return await Link.findByIdAndDelete(linkId);
+  }
+
+  async reorderLinks(links) {
+    const bulkOperations = links.map(({ id, order }) => ({
+      updateOne: { filter: { _id: id }, update: { order } }
+    }));
+    return await Link.bulkWrite(bulkOperations);
+  }
+}
+
+module.exports = LinkRepository;

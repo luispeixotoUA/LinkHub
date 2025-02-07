@@ -1,31 +1,30 @@
+const User = require('../models/User');
+
 class UserRepository {
-    constructor(UserModel) {
-      this.User = UserModel;
-    }
-  
-    async createUser(userData) {
-      try {
-        return await this.User.create(userData);
-      } catch (err) {
-        console.error('Erro ao criar usuário:', err);
-        throw new Error('Validation error: Unable to create user');
-      }
-    }
-    
-  
-    async findByUsername(username) {
-      console.log("Entrou no repository")
-      return this.User.findOne({ where: { username } });
-    }
-  
-    async findByUrl(url) {
-      return this.User.findOne({ where: { url } });
-    }
-  
-    async findById(userId) {
-      return this.User.findByPk(userId);
-    }
+  constructor(UserModel) {
+    this.User = UserModel;
   }
-  
-  module.exports = UserRepository;
-  
+
+  async createUser(userData) {
+    return await this.User.create(userData);
+  }
+
+  async findByUsername(username) {
+    console.log("Entrou no repository");
+    return this.User.findOne({ username });
+  }
+
+  async findByUrl(url) {
+    return await this.User.findOne({ url });
+  }
+
+  async findById(userId) {
+    return await this.User.findById(userId);
+  }
+
+  async getAllUsers() {
+    return await this.User.find().select('-password -theme');
+  }
+}
+
+module.exports = UserRepository;

@@ -17,21 +17,37 @@ export const userService = {
     return data.value;
   },
 
+  async getAllUsers() {
+    const { token } = useAuth();
+
+    const { data, error } = await useFetch('/api/users/getAll', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token.value}`
+      },
+      server: false
+    });
+
+    if (error.value) throw new Error(error.value.message);
+    return data.value;
+  },
+
   async updateProfile(userData) {
     const { token } = useAuth();
 
-    // Garante que o tema tem todos os campos antes de enviar
-    const theme = {
-      backgroundColor: userData.theme?.backgroundColor || '#1e1e1e',
-      textColor: userData.theme?.textColor || '#ffffff',
-      secondaryColor: userData.theme?.secondaryColor || '#3b82f6'
-    };
-
+    // Mantenha todos os dados existentes do perfil
     const { data, error } = await useFetch('/api/users/profile', {
       method: 'PUT',
       body: {
-        ...userData,
-        theme
+        displayName: userData.displayName,
+        url: userData.url,
+        profilePicture: userData.profilePicture,
+        theme: {
+          primaryColor: userData.theme.primaryColor,
+          backgroundColor: userData.theme.backgroundColor,
+          textColor: userData.theme.textColor,
+          borderRadius: userData.theme.borderRadius
+        }
       },
       headers: {
         'Authorization': `Bearer ${token.value}`

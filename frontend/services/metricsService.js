@@ -31,28 +31,36 @@ export const metricsService = {
     return descriptions[activity.type] || activity.description;
   },
 
+
   async trackProfileView(username) {
-    return await $fetch('/api/metrics/profile/${username}/view', {
-      method: 'POST'
+    console.log('TA A DAR TRACKING');
+    const { data, error } = await useFetch('/api/metrics/profile/' + username + '/view', {
+      method: 'POST',
+      server: false,
     });
-  },
 
+    if (error.value) throw new Error(error.value.message);
+    return data.value;
+  },
+  
   async trackLinkClick(linkId) {
-    return await $fetch('/api/metrics/link/${linkId}/click', {
-      method: 'POST'
+    const { data, error } = await useFetch('/api/metrics/link/' + linkId + '/click', {
+      method: 'POST',
+      server: false,
     });
+
+    if (error.value) throw new Error(error.value.message);
+    return data.value;
   },
 
-
- 
   formatTimestamp(timestamp) {
     const date = new Date(timestamp);
     const now = new Date();
     const diff = Math.floor((now - date) / 1000);
- 
+
     if (diff < 60) return 'Agora mesmo';
     if (diff < 3600) return `Há ${Math.floor(diff/60)} minutos`;
     if (diff < 86400) return `Há ${Math.floor(diff/3600)} horas`;
     return `Há ${Math.floor(diff/86400)} dias`;
   }
- };
+};

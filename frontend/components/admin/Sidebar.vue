@@ -80,17 +80,13 @@
  const menuItems = computed(() => {
   if (isAdmin.value) {
     return [
-      { name: 'Dashboard', path: '/admin/admin', icon: '📊' },
-      { name: 'Usuários', path: '/admin/admin/users', icon: '👥' },
-      { name: 'Métricas', path: '/admin/admin/metrics', icon: '📈' },
-      { name: 'Configurações', path: '/admin/admin/settings', icon: '⚙️' },
+      { name: 'Utilizadores', path: '/admin/admin', icon: '👥' },
     ]
   }
   return [
     { name: 'Dashboard', path: '/admin', icon: '📊' },
     { name: 'Links', path: '/admin/links', icon: '🔗' },
     { name: 'Perfil', path: '/admin/profile', icon: '👤' },
-    { name: 'Configurações', path: '/admin/settings', icon: '⚙️' },
   ]
  })
  

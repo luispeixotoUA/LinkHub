@@ -6,7 +6,7 @@
     >
       <div 
         class="w-6 h-6 rounded"
-        :style="{ backgroundColor: getHexFromTailwind(modelValue || 'bg-gray-100') }"
+        :style="{ backgroundColor: modelValue || '#f3f4f6' }"
       ></div>
       <span class="text-sm">{{ modelValue || 'Selecionar cor' }}</span>
     </button>
@@ -38,7 +38,7 @@
             <button 
               v-for="(hex, shade) in tailwindColors[selectedFamily]"
               :key="shade"
-              @click="selectColor(`bg-${selectedFamily}-${shade}`)"
+              @click="selectColor(hex)"
               class="group relative aspect-square rounded-lg border hover:ring-2 hover:ring-offset-2 transition-all"
               :style="{ backgroundColor: hex }"
             >
@@ -53,11 +53,10 @@
           <div class="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
             <div 
               class="w-12 h-12 rounded-lg shadow-sm" 
-              :style="{ backgroundColor: getHexFromTailwind(selectedValue) }"
+              :style="{ backgroundColor: selectedValue }"
             ></div>
             <div>
               <div class="text-sm font-medium">{{ selectedValue }}</div>
-              <div class="text-sm text-gray-500">{{ getHexFromTailwind(selectedValue) }}</div>
             </div>
           </div>
         </div>
@@ -68,7 +67,7 @@
 
 <script setup>
 import { ref, watch } from 'vue'
-import { tailwindColors, getHexFromTailwind } from '~/utils/tailwindColors'
+import { tailwindColors } from '~/utils/tailwindColors'
 import Modal from '~/components/Modal.vue'
 
 const props = defineProps(['modelValue'])
@@ -76,11 +75,11 @@ const emit = defineEmits(['update:modelValue'])
 
 const showPicker = ref(false)
 const selectedFamily = ref('blue')
-const selectedValue = ref(props.modelValue)
+const selectedValue = ref(props.modelValue || '#f3f4f6')
 
-function selectColor(value) {
-  selectedValue.value = value
-  emit('update:modelValue', value)
+function selectColor(hex) {
+  selectedValue.value = hex
+  emit('update:modelValue', hex)
   showPicker.value = false
 }
 

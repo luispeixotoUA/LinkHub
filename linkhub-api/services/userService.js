@@ -44,6 +44,10 @@ class UserService {
   
       return updatedUser;
     }
+
+    async getAllUsers() {
+        return this.userRepository.getAllUsers();
+    }
   }
   
   module.exports = UserService;

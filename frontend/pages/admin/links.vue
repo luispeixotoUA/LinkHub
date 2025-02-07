@@ -3,19 +3,7 @@
     <!-- Header Actions -->
     <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
       <div class="flex items-center gap-2 w-full sm:w-auto">
-        <!-- Search -->
-        <div class="relative flex-1 sm:flex-none">
-          <input
-            type="text"
-            placeholder="Buscar links..."
-            class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-lg shadow-sm 
-                   focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all"
-            v-model="searchQuery"
-          />
-          <svg class="absolute left-3 top-3 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-        </div>
+
         
         <!-- Refresh Button -->
         <button

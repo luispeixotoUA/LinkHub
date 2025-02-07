@@ -1,5 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const UserRepository = require('../repositories/UserRepository');
+const { MongoClient } = require('mongodb');
 
 class AuthService {
   constructor(userRepository) {
@@ -7,7 +9,6 @@ class AuthService {
   }
 
   async register(userData) {
-    // Verificar se o username já está em uso
     const existingUser = await this.userRepository.findByUsername(userData.username);
     if (existingUser) {
       throw new Error('Username already taken');

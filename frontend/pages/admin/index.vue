@@ -2,6 +2,7 @@
   <div class="space-y-6">
     <!-- Stats Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+
       <div v-for="stat in stats" :key="stat.title" 
            class="bg-white rounded-lg p-4 shadow hover:shadow-md transition-all">
         <div class="flex items-center gap-3">
